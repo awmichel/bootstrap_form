@@ -18,6 +18,7 @@ module BootstrapForm
     end
 
     FORM_HELPERS.each do |method_name|
+      alias_method "orig_#{method_name}", method_name
       define_method(method_name) do |name, *args|
         options = args.extract_options!.symbolize_keys!
 
@@ -38,6 +39,7 @@ module BootstrapForm
       end
     end
 
+    alias_method :orig_check_box, :check_box
     def check_box(name, options = {}, checked_value = '1', unchecked_value = '0')
       options = options.symbolize_keys!
 
@@ -72,6 +74,7 @@ module BootstrapForm
       form_group(method, label: { text: label, class: label_class }, help: help) { html }
     end
 
+    alias_method :orig_radio_button, :radio_button
     def radio_button(name, value, *args)
       options = args.extract_options!.symbolize_keys!
       args << options.except(:label, :help, :inline)
@@ -96,8 +99,9 @@ module BootstrapForm
       end
     end
 
-    def submit(name, options = {})
       options.merge! class: 'btn btn-default' unless options.has_key? :class
+    alias_method :orig_submit, :submit
+    def submit(name = nil, options = {})
       super name, options
     end
 
