@@ -4,7 +4,8 @@ module BootstrapForm
 
     FORM_HELPERS = %w{text_field password_field text_area file_field
                      number_field email_field telephone_field phone_field url_field
-                     select collection_select date_select time_select datetime_select}
+                     select collection_select date_select time_select datetime_select
+                     grouped_collection_select date_field}
 
     delegate :content_tag, to: :@template
     delegate :capture, to: :@template
@@ -27,7 +28,7 @@ module BootstrapForm
         form_group(name, label: { text: label, class: label_class }, help: help) do
           options[:class] = "form-control #{options[:class]}".rstrip
           args << options.except(:prepend, :append)
-          if method_name == "select"
+          if %w(select collection_select grouped_collection_select).include?(method_name)
             input = super(name, *args, { class: options[:class] })
           else
             input = super(name, *args)
@@ -50,6 +51,25 @@ module BootstrapForm
           label(name, html)
         end
       end
+    end
+
+    alias_method :orig_collection_check_boxes, :collection_check_boxes
+    def collection_check_boxes(method, collection, value_method, text_method, options = {}, html_options = {}, &block)
+      label = options.delete(:label)
+      label_class = hide_class if options.delete(:hide_label)
+      help = options.delete(:help)
+      inline = options.delete(:inline) || false
+
+      if inline || block_given?
+        html = super(method, collection, value_method, text_method, options, html_options, &block)
+      else
+        html = super(method, collection, value_method, text_method, options, html_options) do |f|
+          html = f.label { f.check_box + f.text }
+          content_tag(:div, html, class: 'checkbox')
+        end
+      end
+
+      form_group(method, label: { text: label, class: label_class }, help: help) { html }
     end
 
     def radio_button(name, value, *args)
