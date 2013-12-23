@@ -99,9 +99,9 @@ module BootstrapForm
       end
     end
 
-      options.merge! class: 'btn btn-default' unless options.has_key? :class
     alias_method :orig_submit, :submit
     def submit(name = nil, options = {})
+      options.merge! class: 'btn btn-primary' unless options.has_key? :class
       super name, options
     end
 
