@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/potenza/bootstrap_form.png)](https://travis-ci.org/potenza/bootstrap_form) [![Code Climate](https://codeclimate.com/github/potenza/bootstrap_form.png)](https://codeclimate.com/github/potenza/bootstrap_form)
+[![Build Status](https://travis-ci.org/potenza/bootstrap_form.png?branch=master)](https://travis-ci.org/potenza/bootstrap_form) [![Code Climate](https://codeclimate.com/github/potenza/bootstrap_form.png)](https://codeclimate.com/github/potenza/bootstrap_form)
 
 # BootstrapForm
 
@@ -30,7 +30,7 @@ To get started, just use the **BootstrapForm** form helper. Here's an example:
   <%= f.email_field :email %>
   <%= f.password_field :password %>
   <%= f.check_box :remember_me %>
-  <%= f.submit "Log In" %>
+  <%= f.submit %>
 <% end %>
 ```
 
@@ -92,7 +92,7 @@ using screen readers.
   <%= f.email_field :email, hide_label: true %>
   <%= f.password_field :password, hide_label: true %>
   <%= f.check_box :remember_me %>
-  <%= f.submit "Log In" %>
+  <%= f.submit %>
 <% end %>
 ```
 
@@ -113,18 +113,8 @@ In the example below, the checkbox and submit button have been wrapped in a
     <%= f.check_box :remember_me %>
   <% end %>
   <%= f.form_group do %>
-    <%= f.submit "Log In" %>
+    <%= f.submit %>
   <% end %>
-<% end %>
-```
-
-To create a static control in a horizontal form, use the following markup:
-
-```erb
-<%= f.form_group :nil, label: { text: "Foo" } do %>
-  <p class="form-control-static">
-    Bar
-  </p>
 <% end %>
 ```
 
@@ -157,13 +147,20 @@ The `btn btn-default` css classes are automatically added to your submit
 buttons.
 
 ```erb
-<%= f.submit "Log In" %>
+<%= f.submit %>
+```
+
+You can also use the `primary` helper, which adds `btn btn-primary` to your
+submit button:
+
+```erb
+<%= f.primary "Optional Label" %>
 ```
 
 You can specify your own classes like this:
 
 ```erb
-<%= f.submit "Log In", class: "btn btn-primary" %>
+<%= f.submit "Log In", class: "btn btn-success" %>
 ```
 
 ### Checkboxes and Radios
@@ -212,6 +209,33 @@ You can pass `prepend` and/or `append` options to input fields:
 <%= f.text_field :price, prepend: "$", append: ".00" %>
 ```
 
+### Static Controls
+
+You can create a static control like this:
+
+```erb
+<%= f.static_control :email %>
+```
+
+Here's the output:
+
+```html
+<div class="form-group">
+  <label class="col-sm-2 control-label" for="user_email">Email</label>
+  <div class="col-sm-10">
+    <p class="form-control-static">test@email.com</p>
+  </div>
+</div>
+```
+
+You can also create a static control that isn't based on a model attribute:
+
+```erb
+<%= f.static_control nil, label: "Custom Static Control" do %>
+  Content Here
+<% end %>
+```
+
 ### Validation Errors
 
 When a validation error is triggered, the field will be outlined and the error
@@ -224,6 +248,11 @@ classes, you can use the `alert_message` helper:
 ```erb
 <%= f.alert_message "Please fix the errors below." %>
 ```
+
+### Internationalization
+
+bootstrap_form follows standard rails conventions so it's i18n-ready. See more
+here: http://guides.rubyonrails.org/i18n.html#translations-for-active-record-models
 
 ## Code Triage page
 
