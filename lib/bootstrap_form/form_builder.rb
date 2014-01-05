@@ -68,7 +68,8 @@ module BootstrapForm
         end
       end
 
-      form_group(method, label: { text: label, class: label_class }, help: help) { html }
+      content = content_tag(:div, html, class: 'collection-checkboxes')
+      form_group(method, label: { text: label, class: label_class }, help: help) { content }
     end
 
     alias_method :orig_radio_button, :radio_button
