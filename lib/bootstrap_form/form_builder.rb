@@ -145,6 +145,8 @@ module BootstrapForm
     def normalize_args!(method_name, args)
       if method_name == "select"
         args << {} while args.length < 3
+      elsif method_name == "grouped_collection_select"
+        args << {} while args.length < 7
       elsif method_name == "collection_select"
         args << {} while args.length < 5
       elsif method_name =~ /_select/
