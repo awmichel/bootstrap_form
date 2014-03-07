@@ -175,7 +175,7 @@ module BootstrapForm
     end
 
     def has_error?(name)
-      object.respond_to?(:errors) && !(name.nil? || object.errors[name].empty?)
+      !errors_for(name).empty?
     end
 
     def prepend_and_append_input(input, prepend, append)
@@ -196,8 +196,14 @@ module BootstrapForm
     end
 
     def generate_help(name, help_text)
-      help_text = object.errors[name].join(', ') if has_error?(name)
+      help_text = errors_for(name).join(', ') if has_error?(name)
       content_tag(:span, help_text, class: 'help-block') if help_text
+    end
+
+    def errors_for(name)
+      return [] if name.nil? || !object.respond_to?(:errors)
+      name = name.to_s.sub!('_id', '').to_sym if name =~ /_id$/
+      object.errors[name]
     end
   end
 end
